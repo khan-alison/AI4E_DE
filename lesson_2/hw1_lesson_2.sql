@@ -65,27 +65,18 @@ SELECT *,
 FROM cte
 
 -- 6.	Tính luỹ kết doanh thu mỗi khách hàng mang lại theo từng tháng.
-WITH cte AS (
-    SELECT
-        customerid,
-        invoicemonth,
-        SUM(revenue) AS monthly_revenue
-    FROM
-        ai4e_test.einvoice
-    GROUP BY
-        customerid,
-        invoicemonth
-    ORDER BY
-        customerid,
-        invoicemonth
-)
-SELECT
-    customerid,
-    invoicemonth,
-    monthly_revenue,
-    SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY invoicemonth) AS cumulative_revenue
-FROM
-    cte
-ORDER BY
-    customerid,
-    invoicemonth;
+WITH cte AS (SELECT customerid,
+                    invoicemonth,
+                    SUM(revenue) AS monthly_revenue
+             FROM ai4e_test.einvoice
+             GROUP BY customerid,
+                      invoicemonth
+             ORDER BY customerid,
+                      invoicemonth)
+SELECT customerid,
+       invoicemonth,
+       monthly_revenue,
+       SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY invoicemonth) AS cumulative_revenue
+FROM cte
+ORDER BY customerid,
+         invoicemonth;
