@@ -62,21 +62,16 @@ WITH cte AS (SELECT customerid, invoicemonth, sum(revenue) as monthly_revenue
 SELECT *,
        LAG(monthly_revenue, 1) OVER (PARTITION BY customerid ORDER BY invoicemonth DESC )  AS prev_month_revenue,
        LEAD(monthly_revenue, 1) OVER (PARTITION BY customerid ORDER BY invoicemonth DESC ) AS next_month_revenue
-FROM cte
-
+FROM cte;
 -- 6.	Tính luỹ kết doanh thu mỗi khách hàng mang lại theo từng tháng.
-WITH cte AS (SELECT customerid,
-                    invoicemonth,
-                    SUM(revenue) AS monthly_revenue
+WITH cte AS (SELECT customerid, invoicemonth, SUM(revenue) as monthly_revenue
              FROM ai4e_test.einvoice
-             GROUP BY customerid,
-                      invoicemonth
-             ORDER BY customerid,
-                      invoicemonth)
+             GROUP BY customerid, invoicemonth
+             ORDER BY customerid, invoicemonth)
+
 SELECT customerid,
        invoicemonth,
        monthly_revenue,
-       SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY invoicemonth) AS cumulative_revenue
+       SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY monthly_revenue) AS cumulative_revenue
 FROM cte
-ORDER BY customerid,
-         invoicemonth;
+ORDER BY customerid, invoicemonth;
