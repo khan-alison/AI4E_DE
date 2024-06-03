@@ -67,11 +67,11 @@ FROM cte;
 WITH cte AS (SELECT customerid, invoicemonth, SUM(revenue) as monthly_revenue
              FROM ai4e_test.einvoice
              GROUP BY customerid, invoicemonth
-             ORDER BY customerid, invoicemonth)
+             ORDER BY customerid, invoicemonth desc)
 
 SELECT customerid,
        invoicemonth,
        monthly_revenue,
-       SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY monthly_revenue) AS cumulative_revenue
+       SUM(monthly_revenue) OVER (PARTITION BY customerid ORDER BY invoicemonth) AS cumulative_revenue
 FROM cte
 ORDER BY customerid, invoicemonth;
