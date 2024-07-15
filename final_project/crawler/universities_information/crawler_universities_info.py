@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from config.directory_management import DirectoryManagement
 
-
 def get_content_request(url='https://diemthi.tuyensinh247.com/diem-chuan.html'):
     try:
         response = requests.get(url)
