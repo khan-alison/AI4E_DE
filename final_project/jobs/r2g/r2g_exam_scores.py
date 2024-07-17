@@ -12,6 +12,7 @@ DATE_FORMAT = "yyyy-MM-dd"
 
 class JobExecutor(R2GExecutor):
     def __init__(self, spark, reader, cols, input_tables, target, params):
+        super().__init__(spark, reader, input_tables, target)
         self.spark = spark
         self.reader = reader
         self.cols = cols
@@ -19,7 +20,6 @@ class JobExecutor(R2GExecutor):
         self.target = target
         self.partition_col = "partition_date"
         self.params = params
-
 
     def execute(self):
         df = self.read_dfs()
@@ -33,7 +33,7 @@ class JobExecutor(R2GExecutor):
         )
 
     def _transform(self, df):
-        pass
+        return df.select(*self.cols)
 
     def _join_data(self, df_l, df_r):
         pass
@@ -46,15 +46,34 @@ if __name__ == "__main__":
     configurations = {
         "appName": "PySpark Example - 1-1 transform",
         "master": "local",
-        "target_output_path": "./golden/universities",
+        "target_output_path": "./golden/exam_scores",
         "cols": [
-            "url",
-            "university_code",
-            "university_name"
+            "schoolYear",
+            "stt",
+            "studentCode",
+            "TOAN",
+            "VAN",
+            "LY",
+            "HOA",
+            "SINH",
+            "SU",
+            "DIA",
+            "GDCD",
+            "NGOAINGU",
+            "CODE_NGOAINGU",
+            "groupCode",
+            "groupName",
+            "HKTN",
+            "HKXH",
+            "A00",
+            "B00",
+            "C00",
+            "D01",
+            "A01"
         ],
         "input_tables": [
             {
-                "table": "universities",
+                "table": "exam_result",
                 "path": "./raw/"
             }
         ],

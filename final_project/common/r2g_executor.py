@@ -10,6 +10,7 @@ class R2GExecutor(BaseExecutor):
         self.input_tables = input_tables
         self.target = target
         self.partition_col = "partition_date"
+
     def read_dfs(self):
         return self.reader.read_table()
 
